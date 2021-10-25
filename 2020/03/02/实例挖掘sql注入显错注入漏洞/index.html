@@ -1,0 +1,221 @@
+<script type="text/javascript" src="/js/crash_cheat.js"></script><!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>花几分钟找个上市公司的SQL注入漏洞 | jasson个人博客</title><meta name="keywords" content="SQL注入,显错注入,漏洞利用,实战渗透,漏洞挖掘"><meta name="author" content="jasson"><meta name="copyright" content="jasson"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="花几分钟找个上市公司的SQL注入漏洞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="花几分钟找个上市公司的SQL注入漏洞">
+<meta property="og:url" content="https://j-jasson2.github.io/2020/03/02/%E5%AE%9E%E4%BE%8B%E6%8C%96%E6%8E%98sql%E6%B3%A8%E5%85%A5%E6%98%BE%E9%94%99%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="jasson个人博客">
+<meta property="og:description" content="花几分钟找个上市公司的SQL注入漏洞">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://j-jasson2.github.io/images/pasted-36.png">
+<meta property="article:published_time" content="2020-03-02T02:45:41.000Z">
+<meta property="article:modified_time" content="2021-08-07T16:20:56.664Z">
+<meta property="article:author" content="jasson">
+<meta property="article:tag" content="漏洞利用">
+<meta property="article:tag" content="SQL注入">
+<meta property="article:tag" content="显错注入">
+<meta property="article:tag" content="实战渗透">
+<meta property="article:tag" content="漏洞挖掘">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://j-jasson2.github.io/images/pasted-36.png"><link rel="shortcut icon" href="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&refer=http%3A%2F%2Finews.gtimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630728108&t=1576409e5f212dd7279b9a1c880c7086"><link rel="canonical" href="https://j-jasson2.github.io/2020/03/02/%E5%AE%9E%E4%BE%8B%E6%8C%96%E6%8E%98sql%E6%B3%A8%E5%85%A5%E6%98%BE%E9%94%99%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '花几分钟找个上市公司的SQL注入漏洞',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-08-08 00:20:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/static-butterfly/dist/css/index.min.css"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&amp;refer=http%3A%2F%2Finews.gtimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630728108&amp;t=1576409e5f212dd7279b9a1c880c7086" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/pasted-36.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">jasson个人博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">花几分钟找个上市公司的SQL注入漏洞</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-03-02T02:45:41.000Z" title="发表于 2020-03-02 10:45:41">2020-03-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-08-07T16:20:56.664Z" title="更新于 2021-08-08 00:20:56">2021-08-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="花几分钟找个上市公司的SQL注入漏洞"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>之前发出了一篇显错注入的文章之后，很多读者反馈说难度太大，看不懂，那么今天，我进行了改进，为大家推送一篇漏洞实例，实战演示怎么挖掘sql显错注入漏洞。最后说一句，我们要做一名合法的白帽子，要学会 <strong>点到为止</strong> 。</p>
+<h2 id="中华人民共和国网络安全法"><a href="#中华人民共和国网络安全法" class="headerlink" title="中华人民共和国网络安全法"></a>中华人民共和国网络安全法</h2><p><img src="/images/pasted-41.png" alt="upload successful"></p>
+<p><img src="/images/pasted-42.png" alt="upload successful"></p>
+<p><img src="/images/pasted-43.png" alt="upload successful"></p>
+<h2 id="寻找漏洞"><a href="#寻找漏洞" class="headerlink" title="寻找漏洞"></a>寻找漏洞</h2><p>1.首先打开谷歌镜像站，这里不推荐搭梯子（vpn），因为这个违法且不安全，所以我们使用大佬搭的镜像站（百度搜索，找到一个能用的就行，这里推荐一个<a target="_blank" rel="noopener" href="http://www.googlen.org/">http://www.googlen.org/</a> ），搜索栏里输入： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inurl:php?sid= 广州 有限公司</span><br></pre></td></tr></table></figure>
+<p><img src="/images/pasted-33.png" alt="upload successful"></p>
+<hr>
+<p><img src="/images/pasted-34.png" alt="upload successful"></p>
+<p>2.每打开一个网站，就在它的url地址后面加个单引号‘或者反斜杠\，如果页面报错了，那么恭喜你，这里有sql注入漏洞。经过尝试，在一个页面中，我加个单引号，页面产生错误了（ps:单引号在url栏里被url编码为%27）</p>
+<p><img src="/images/pasted-35.png" alt="upload successful"></p>
+<h2 id="显错注入具体流程"><a href="#显错注入具体流程" class="headerlink" title="显错注入具体流程"></a>显错注入具体流程</h2><p>1.看到了warning，也就是说这个网站存在sql注入，先在%27后面加个空格，加个%23（%23通过url解码为#，起到注释的作用），新的url传参为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=243&#x27; #</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/pasted-36.png" alt="upload successful"></p>
+<p>2.可以看到，闭合成功了，页面返回正常，这个时候，就是猜字段了，在单引号和#之间放入order by 数字，猜字段<br>当前传参为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=243&#x27; order by 1 #</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/pasted-37.png" alt="upload successful"></p>
+<p>3.根据之前的教学推文中知道，接下来就是通过order by 判断当前数据库字段数了，order by 1页面正常，order by 2 页面正常……一直到order by 29的时候，页面又出现了错误，下面的文字内容没了，所以我们知道，字段数为28。当前url传参为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=243&#x27; order by 29 #</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/pasted-38.png" alt="upload successful"></p>
+<p>4.字段知道了，接下来就是联合查询了，获取了显错点4，6，13。（ps:这里有个坑，243变成了-243，这是为了让联合查询前面的语句报错，这样就会输出后面的显错点了，跟limit 1,1 更换显示为第2行道理相同）<br>当前url传参为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-243&#x27; union select 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28 #</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/pasted-39.png" alt="upload successful"></p>
+<p>5.有了显错点，已经可以说是找到漏洞了，我们偷偷看看它的数据库，将4，6，13换成之间推文里提到的函数，获取数据库库名，数据库当前用户名，数据库版本号。</p>
+<p><img src="/images/pasted-40.png" alt="upload successful"></p>
+<p>6.这里我打码了一部分，数据库库名开头为ao ，数据库当前用户名为ao***@localhost，数据库当前版本为5.5.45。本次实例就到这里，点到为止嘛，查到库名已经可以去漏洞提交平台进行提交了。本次实例仅作为学习资料，若有出现打码遗漏等问题，也请大家不要对网站进行攻击。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">jasson</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://j-jasson2.github.io/2020/03/02/%E5%AE%9E%E4%BE%8B%E6%8C%96%E6%8E%98sql%E6%B3%A8%E5%85%A5%E6%98%BE%E9%94%99%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">https://j-jasson2.github.io/2020/03/02/实例挖掘sql注入显错注入漏洞/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://j-jasson2.github.io" target="_blank">jasson个人博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8/">漏洞利用</a><a class="post-meta__tags" href="/tags/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a><a class="post-meta__tags" href="/tags/%E6%98%BE%E9%94%99%E6%B3%A8%E5%85%A5/">显错注入</a><a class="post-meta__tags" href="/tags/%E5%AE%9E%E6%88%98%E6%B8%97%E9%80%8F/">实战渗透</a><a class="post-meta__tags" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/">漏洞挖掘</a></div><div class="post_share"><div class="social-share" data-image="/images/pasted-36.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/03/08/SQL%E6%B3%A8%E5%85%A5%E5%85%A8%E6%96%B9%E4%BD%8D%E5%88%A9%E7%94%A8%E4%B9%8B%E6%98%BE%E9%94%99%E6%B3%A8%E5%85%A5/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.shangdixinxi.com%2Fup%2Finfo%2F202006%2F20200604170532028792.png&amp;refer=http%3A%2F%2Fimg.shangdixinxi.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630916300&amp;t=5efb5b64bc17ac6be7c880a5fa3db56b" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SQL注入全方位利用之显错注入</div></div></a></div><div class="next-post pull-right"><a href="/2020/01/14/hello-world/"><img class="next-cover" src="/img/12.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Hello World</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/03/08/SQL注入全方位利用之显错注入/" title="SQL注入全方位利用之显错注入"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.shangdixinxi.com%2Fup%2Finfo%2F202006%2F20200604170532028792.png&refer=http%3A%2F%2Fimg.shangdixinxi.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630916300&t=5efb5b64bc17ac6be7c880a5fa3db56b" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-08</div><div class="title">SQL注入全方位利用之显错注入</div></div></a></div><div><a href="/2020/09/02/sql注入之重新学习/" title="sql注入之重新学习"><img class="cover" src="/images/sql.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-02</div><div class="title">sql注入之重新学习</div></div></a></div><div><a href="/2020/05/13/复现：通达OA任意以管理员身份进入后台/" title="复现：通达OA任意以管理员身份进入后台"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.tongda2000.com%2Foa%2FMYOA2015%2Ffree%2Fstyle%2Fimages%2Fslide%2FSport%2F4.jpg&refer=http%3A%2F%2Fwww.tongda2000.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630915199&t=d53ae596832d4a1c4d980fc3fae686dd" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-13</div><div class="title">复现：通达OA任意以管理员身份进入后台</div></div></a></div><div><a href="/2020/05/01/极易上手的报错注入/" title="极易上手的报错注入"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2018.cnblogs.com%2Fblog%2F1579399%2F201907%2F1579399-20190717003510359-570355042.png&refer=http%3A%2F%2Fimg2018.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630916535&t=757f4c39d3a5884249a1291b70cde3b7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-05-01</div><div class="title">极易上手的报错注入</div></div></a></div><div><a href="/2021/02/02/MSSQL数据库注入全方位利用/" title="MSSQL数据库注入全方位利用"><img class="cover" src="https://p5.ssl.qhimg.com/t0181df866952842a55.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-02-02</div><div class="title">MSSQL数据库注入全方位利用</div></div></a></div><div><a href="/2021/02/02/Oracle数据库注入总结/" title="Oracle数据库注入全方位利用总结(渗透必备)"><img class="cover" src="/images/oracle.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-02-02</div><div class="title">Oracle数据库注入全方位利用总结(渗透必备)</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&amp;refer=http%3A%2F%2Finews.gtimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630728108&amp;t=1576409e5f212dd7279b9a1c880c7086" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">jasson</div><div class="author-info__description">专注于Web、内网渗透、红蓝攻防、代码审计，分享知识，分享生活。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/j-jasson2"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E5%8D%8E%E4%BA%BA%E6%B0%91%E5%85%B1%E5%92%8C%E5%9B%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">中华人民共和国网络安全法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BB%E6%89%BE%E6%BC%8F%E6%B4%9E"><span class="toc-number">2.</span> <span class="toc-text">寻找漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E9%94%99%E6%B3%A8%E5%85%A5%E5%85%B7%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">显错注入具体流程</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/10/23/src%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E4%B9%8B%E6%9C%89%E6%95%88%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" title="无题"><img src="/img/12.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2021/10/23/src%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E4%B9%8B%E6%9C%89%E6%95%88%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" title="无题">无题</a><time datetime="2021-10-23T09:23:19.385Z" title="发表于 2021-10-23 17:23:19">2021-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/07/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8Badd_header%E8%A2%AB%E8%A6%86%E7%9B%96/" title="Nginx中间件漏洞之add_header被覆盖"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&amp;refer=http%3A%2F%2Fupload-images.jianshu.io&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630941831&amp;t=6d3fe55cc7cb43085f42e676981de631" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx中间件漏洞之add_header被覆盖"/></a><div class="content"><a class="title" href="/2021/08/07/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8Badd_header%E8%A2%AB%E8%A6%86%E7%9B%96/" title="Nginx中间件漏洞之add_header被覆盖">Nginx中间件漏洞之add_header被覆盖</a><time datetime="2021-08-07T01:45:41.000Z" title="发表于 2021-08-07 09:45:41">2021-08-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/06/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8B%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8A/" title="Nginx中间件漏洞之目录穿越"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&amp;refer=http%3A%2F%2Fupload-images.jianshu.io&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630941831&amp;t=6d3fe55cc7cb43085f42e676981de631" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx中间件漏洞之目录穿越"/></a><div class="content"><a class="title" href="/2021/08/06/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8B%E7%9B%AE%E5%BD%95%E7%A9%BF%E8%B6%8A/" title="Nginx中间件漏洞之目录穿越">Nginx中间件漏洞之目录穿越</a><time datetime="2021-08-06T01:45:41.000Z" title="发表于 2021-08-06 09:45:41">2021-08-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/05/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8BCRLF%E6%B3%A8%E5%85%A5/" title="Nginx中间件漏洞之CRLF注入"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&amp;refer=http%3A%2F%2Fupload-images.jianshu.io&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630941831&amp;t=6d3fe55cc7cb43085f42e676981de631" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx中间件漏洞之CRLF注入"/></a><div class="content"><a class="title" href="/2021/08/05/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8BCRLF%E6%B3%A8%E5%85%A5/" title="Nginx中间件漏洞之CRLF注入">Nginx中间件漏洞之CRLF注入</a><time datetime="2021-08-05T01:45:41.000Z" title="发表于 2021-08-05 09:45:41">2021-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/03/%E6%9F%90cms%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1RCE&amp;%E8%89%B0%E9%9A%BEbypass(%E6%80%9D%E8%B7%AF%E6%B8%85%E5%A5%87)/" title="某cms代码审计RCE&amp;艰难bypass(思路清奇)"><img src="https://img0.baidu.com/it/u=751296986,1439230770&amp;fm=253&amp;fmt=auto&amp;app=120&amp;f=JPEG?w=650&amp;h=407" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="某cms代码审计RCE&amp;艰难bypass(思路清奇)"/></a><div class="content"><a class="title" href="/2021/08/03/%E6%9F%90cms%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1RCE&amp;%E8%89%B0%E9%9A%BEbypass(%E6%80%9D%E8%B7%AF%E6%B8%85%E5%A5%87)/" title="某cms代码审计RCE&amp;艰难bypass(思路清奇)">某cms代码审计RCE&amp;艰难bypass(思路清奇)</a><time datetime="2021-08-03T08:20:43.038Z" title="发表于 2021-08-03 16:20:43">2021-08-03</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> jasson</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><p><a style="margin-inline:5px"target="_blank" href="https://hexo.io/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo" alt="HEXO"></a><a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用 Butterfly" alt="Butterfly"></a><a style="margin-inline:5px"target="_blank" href="https://www.jsdelivr.com/"><img src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用 Jsdelivr 为静态资源提供CDN加速" alt="Jsdelivr"></a><a style="margin-inline:5px"target="_blank" href="https://github.com/"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由 GitHub 托管" alt="GitHub"></a><a style="margin-inline:5px"target="_blank"href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" alt="img" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'ezr37wKgCkQA0GoJHntOvgbB-MdYXbMMI',
+      appKey: '7waFMOWmYb026lMWzexxu7RF',
+      placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+      requiredFields: ["nick,mail"],
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script defer src="/live2d-widget/autoload.js"></script><script defer src="/js/phone.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="true" data-text="富强,明主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
