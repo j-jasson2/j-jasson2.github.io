@@ -1,0 +1,270 @@
+<script type="text/javascript" src="/js/crash_cheat.js"></script><!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>内网渗透初探(一) | jasson个人博客</title><meta name="keywords" content="内网渗透"><meta name="author" content="jasson"><meta name="copyright" content="jasson"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="内网渗透初探(一)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网渗透初探(一)">
+<meta property="og:url" content="https://j-jasson2.github.io/2021/10/02/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E5%88%9D%E6%8E%A2(%E4%B8%80)/index.html">
+<meta property="og:site_name" content="jasson个人博客">
+<meta property="og:description" content="内网渗透初探(一)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://j-jasson2.github.io/images/neiwang.png">
+<meta property="article:published_time" content="2021-10-02T02:45:41.000Z">
+<meta property="article:modified_time" content="2021-11-24T05:00:24.687Z">
+<meta property="article:author" content="jasson">
+<meta property="article:tag" content="内网渗透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://j-jasson2.github.io/images/neiwang.png"><link rel="shortcut icon" href="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&refer=http%3A%2F%2Finews.gtimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630728108&t=1576409e5f212dd7279b9a1c880c7086"><link rel="canonical" href="https://j-jasson2.github.io/2021/10/02/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E5%88%9D%E6%8E%A2(%E4%B8%80)/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '内网渗透初探(一)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-11-24 13:00:24'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/static-butterfly/dist/css/index.min.css"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&amp;refer=http%3A%2F%2Finews.gtimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630728108&amp;t=1576409e5f212dd7279b9a1c880c7086" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">67</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/neiwang.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">jasson个人博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">内网渗透初探(一)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-10-02T02:45:41.000Z" title="发表于 2021-10-02 10:45:41">2021-10-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-24T05:00:24.687Z" title="更新于 2021-11-24 13:00:24">2021-11-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="内网渗透初探(一)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><meta name="referrer" content="no-referrer"/>
+
+<h1 id="0x01-基础知识"><a href="#0x01-基础知识" class="headerlink" title="0x01 基础知识"></a>0x01 基础知识</h1><pre><code>内网渗透，从字面上理解便是对目标服务器所在内网进行渗透并最终获取域控权限的一种渗透。内网渗透的前提需要获取一个Webshell，可以是低权限的Webshell，因为可以通过提权获取高权限。
+在进行内网渗透之前需要了解一个概念，域环境。在内网中，往往可能存在几百上千台机器，例如需要对机器进行升级、打补丁、设置权限等，管理员不可能一台一台地更新修改。因此便衍生出了域环境。管理员以一台主机作为域控制器新建一个域，将所有其他主机加入域中，以域控来操作其他主机。因为域控的高权限，导致了域控所在的主机的管理员账号密码，可以登录任意一台主机，所以内网渗透的最终目标，往往便是拿下域控的权限。
+</code></pre>
+<p>首先通过提权获取一个具有管理员权限的账号密码hacker/1234,abcd。具体提权过程就不细说了。下面将利用获取的这个具有管理员权限的账号密码正式开始内网渗透实践。</p>
+<h1 id="0x02-内网穿透"><a href="#0x02-内网穿透" class="headerlink" title="0x02 内网穿透"></a>0x02 内网穿透</h1><p>在渗透测试过程中，我们拿下了一台服务器的权限，并且通过netstat -ano发现开启了3389端口，想要远程桌面连接的时候发现无法连接。这是因为我们获取的服务器所处的环境为内网，而内网主机的3389端口，是公网IP通过端口映射的。也就是说，我们连接的外网IP地址的3389端口，映射到内网中，不一定是那台服务器的3389端口。<br>    解决这种问题的方法有两种：<br>    1、让目标机器去连接外网主机（必须有一台公网服务器，内网主机能够访问互联网）<br>    2、在目标机器上设置一个信号站（放一个WEB文件在目标机器上，所有流量都经过这个文件通信）<br>    在渗透测试过程中，内网主机不能够访问互联网是很常见的，下面通过方法2进行内网穿透。</p>
+<h2 id="一、具体流程"><a href="#一、具体流程" class="headerlink" title="一、具体流程"></a>一、具体流程</h2><p>1、首先需要一款工具regeorg来建立一个信号站。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345752307-8b85de0b-2951-4a0a-b5c3-1571b105d6e8.png#id=A6lLl&originHeight=352&originWidth=903&originalType=binary&ratio=1&status=done&style=none"></p>
+<p>2、这里以PHP站点为例，将tunnel.nosocket.php文件通过之前获取的Webshell上传到站点，尝试使用web端访问确定文件存在。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345752826-dacfb210-8e9d-48ce-bc39-a9658c956f28.png#id=yZjDz&originHeight=510&originWidth=1078&originalType=binary&ratio=1&status=done&style=none"><br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345753399-212e6428-b0cc-4000-990d-ae43a1f19037.png#id=k08e2&originHeight=209&originWidth=852&originalType=binary&ratio=1&status=done&style=none"><br>3、以python环境运行reGeorgSocksProxy.py脚本，将从本机的3344端口经过的数据都发送给目标机器的tunnel.nosocket.php文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python reGeorgSocksProxy.py -l 127.0.0.1 -p 3344 -u http://192.168.229.151/tunnel.nosocket.php</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345753849-dfe47f83-70ca-4128-94f2-a41698d7964e.png#id=lXpYK&originHeight=436&originWidth=1206&originalType=binary&ratio=1&status=done&style=none"><br>4、使用工具proxifier，设置远程桌面软件mstsc.exe的数据包从本地的3344端口出网。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345754385-3ceb3538-a17a-483d-90c6-4cb58bec503c.png#id=nPtfL&originHeight=739&originWidth=1424&originalType=binary&ratio=1&status=done&style=none"><br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345754873-3521e87b-a00a-44f0-8773-22e0087cbe17.png#id=pcvUb&originHeight=739&originWidth=1424&originalType=binary&ratio=1&status=done&style=none"><br>5、成功进行内网穿透，通过远程桌面连接到目标主机。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345755323-d5034b73-0b5b-4617-8a70-033a816a497e.png#id=EZcY8&originHeight=739&originWidth=1424&originalType=binary&ratio=1&status=done&style=none"><br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345755649-9ea8b50a-8531-47b3-9bec-410939d9f795.png#id=hmJL3&originHeight=739&originWidth=1424&originalType=binary&ratio=1&status=done&style=none"><br>其他内网穿透方法还有Frp、Ew、nps等，都是一些可以穿透的工具，原理为搭建一条直通内网的隧道，这里就不详细介绍了。</p>
+<h1 id="0x03-内网信息收集"><a href="#0x03-内网信息收集" class="headerlink" title="0x03 内网信息收集"></a>0x03 内网信息收集</h1><p>1、使用PsExec.exe获取SYSTEM权限<br>进行内网信息收集需要具有一定的权限，所以先进行提权获取SYSTEM权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PsExec.exe -s -i -d cmd</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345755987-41b49d56-f12a-440a-bb7c-f2eaf344a48a.png#id=t2Jjh&originHeight=624&originWidth=1112&originalType=binary&ratio=1&status=done&style=none"><br>2、获取所有域用户列表<br>使用net user /domain命令获取内网的域为ajie.cool，域中具有Administrator、Guest、krbtgt、web用户。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345756507-e3f85c22-07be-4be1-abba-5212f2730940.png#id=D7xVc&originHeight=220&originWidth=544&originalType=binary&ratio=1&status=done&style=none"><br>3、获取域用户组信息<br>使用net group /domain命令获取域用户组信息。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345757037-3343dd14-a311-4cb0-a7d3-7a9f2d7473d4.png#id=qTjBy&originHeight=312&originWidth=491&originalType=binary&ratio=1&status=done&style=none"><br>4、获取域管理员列表<br>使用net group “domain admins” /domain 命令获取域管理员列表，域管账户只有Administrator。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345757568-5da734b8-87bf-484f-93f3-ac6f93b93ce4.png#id=P3gfL&originHeight=207&originWidth=487&originalType=binary&ratio=1&status=done&style=none"><br>5、获取域服务器的IP地址<br>通过ping 域名称来获取域服务器的IP地址。（也可以通过查看dns服务器的IP地址，结合进行判断域服务器的IP地址。）<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345758197-b20ca751-4879-4abe-beb9-c98c7c3ff00a.png#id=Ao2N2&originHeight=224&originWidth=503&originalType=binary&ratio=1&status=done&style=none"><br>​</p>
+<p>6、安装Namp进行扫描<br>前面介绍了Nmap工具，在内网渗透过程中也可以通过Nmap获取内网信息。<br>1）首先通过Webshell上传Nmap的安装包。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345759085-1870e497-a7df-4e59-8adf-88d3ce55508d.png#id=I4y1U&originHeight=526&originWidth=835&originalType=binary&ratio=1&status=done&style=none"><br>2）远程连接目标服务器并安装Nmap进行内网信息收集。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345759643-31b92859-59b8-4803-826a-958589351d21.png#id=b3PSf&originHeight=704&originWidth=1071&originalType=binary&ratio=1&status=done&style=none"><br>7、内网主机存活探测因为动静比较大，也可以通过nbtscan工具进行。因为相对于Nmap的大规模扫描行为，nbtscan基于NetBios进行探测，即是相当于windows打开我的电脑中的网络一样，被发现的几率相对低一些。</p>
+<h1 id="0x04-Hash读取"><a href="#0x04-Hash读取" class="headerlink" title="0x04 Hash读取"></a>0x04 Hash读取</h1><p>Hash读取需要工具mimikatz，由本杰明·德尔皮创建开发的一个能够从内存中读取hash账号密码的工具。<br>    下面介绍如何通过mimikatz工具读取服务器内存中存储的hash密码。<br>1、首先以管理员权限打开mimikatz。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345760142-6577e0e6-a94d-425c-8833-e10bcbefe271.png#id=cnbuv&originHeight=254&originWidth=686&originalType=binary&ratio=1&status=done&style=none"><br>2、使用privilege::debug提升权限。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345760659-1e6257ef-c450-4656-888b-e485500c8984.png#id=KDwmU&originHeight=251&originWidth=817&originalType=binary&ratio=1&status=done&style=none"><br>3、使用sekurlsa::logonpasswords读取到内存中的管理者账号的明文密码和本机的web用户的密码。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345761172-5d2a2764-477b-40a9-81d1-a6b5d188d527.png#id=doPC1&originHeight=366&originWidth=754&originalType=binary&ratio=1&status=done&style=none"><br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345761422-0daf9069-e4d4-4d13-a9b2-3e8d9137ecba.png#id=g5IC4&originHeight=241&originWidth=655&originalType=binary&ratio=1&status=done&style=none"><br>4、远程桌面登录管理员账号。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345761755-f6cffc78-540b-4dc5-9ee0-99b330b126fc.png#id=jtpro&originHeight=450&originWidth=568&originalType=binary&ratio=1&status=done&style=none"><br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345762211-53a9617d-1e4c-4f79-bc65-7ee9af62137b.png#id=IzenG&originHeight=553&originWidth=842&originalType=binary&ratio=1&status=done&style=none"></p>
+<h1 id="0x05-Hash传递"><a href="#0x05-Hash传递" class="headerlink" title="0x05 Hash传递"></a>0x05 Hash传递</h1><h2 id="一、基础知识"><a href="#一、基础知识" class="headerlink" title="一、基础知识"></a>一、基础知识</h2><p>上面介绍了如何进行Hash读取，如果域控管理员使用自己的域控账号登录了服务器，那么就可以抓取到域控的账号和密码了。这样的危害性是巨大的，所以在渗透测试过程中，内网的机器往往会打<strong>KB2871997</strong>补丁，并且修改注册表关闭Wdigest Auth。这样抓取的就不是明文密码了。虽然还是能够获取密文Hash，但是密文Hash往往不可逆，解开需要花费大量精力。<br>在域环境下，检测密码不是先将Hash解密再验证是否正确的。在验证输入的账号密码是否正确的时候，是通过验证Hash是否相同来进行校验的。也就是说，或许我们可以通过获取的Hash来伪造管理员账号密码登录，也就是Hash传递，又叫PTH，通过将获取的NTLM密文传递到验证登录的机器，绕过正常验证进行登录系统。</p>
+<h2 id="二、Wdigest"><a href="#二、Wdigest" class="headerlink" title="二、Wdigest"></a>二、Wdigest</h2><p>注册表中的Wdigest功能关系着内存中是否有明文密码，通过查看注册表键值，可以判断Wdigest功能状态。如果该项值为“1”则为开启，即可以获取明文密码，如果该项值为“0”，则明文密码不会出现在内存中。开启和关闭Wdigest Auth命令如下：<br>（1）开启Wdigest Auth</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f</span><br></pre></td></tr></table></figure>
+<p>（2）关闭Wdigest Auth</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f</span><br></pre></td></tr></table></figure>
+<h2 id="三、IPC"><a href="#三、IPC" class="headerlink" title="三、IPC$"></a>三、IPC$</h2><h4 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h4><pre><code>IPC$(Internet Process Connection)是共享&quot;命名管道&quot;的资源，它是为了让进程间通信而开放的命名管道，通过提供可信任的用户名和口令，连接双方可以建立安全的通道并以此通道进行加密数据的交换，从而实现对远程计算机的访问。
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  IPC$的使用条件：</span><br><span class="line">1.开放了139、445端口；</span><br><span class="line">2.目标开启IPC$文件共享；</span><br><span class="line">3.获取用户账号密码。</span><br></pre></td></tr></table></figure>
+<p>在内网中，默认就会开启IPC$共享文件服务，默认会将C盘共享出来，也就是说，我们可以通过IPC获取目标C盘的权限。</p>
+<h4 id="2、IPC-常用命令"><a href="#2、IPC-常用命令" class="headerlink" title="2、IPC$常用命令"></a>2、IPC$常用命令</h4><table>
+<thead>
+<tr>
+<th>net use</th>
+<th>查看当前连接的IPC$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>net use * /del</td>
+<td>删除IPC$连接</td>
+</tr>
+<tr>
+<td>net use \192.168.1.1\ipc$ 密码 /user:域\账号</td>
+<td>连接域内IP地址为192.168.1.1的主机</td>
+</tr>
+<tr>
+<td>dir \192.168.1.1\c$</td>
+<td>列出连接的192.168.1.1的C盘文件</td>
+</tr>
+<tr>
+<td>copy c:/12.txt \192.168.1.1\c$\2.txt</td>
+<td>复制本地c盘的12.txt文件到192.168.1.1的c盘并保存为2.txt</td>
+</tr>
+</tbody></table>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345762758-1f5d974c-b8cf-45dd-865e-714990b3bb40.png#id=g9pCQ&originHeight=508&originWidth=822&originalType=binary&ratio=1&status=done&style=none"></p>
+<h4 id="3、IPC-命令执行"><a href="#3、IPC-命令执行" class="headerlink" title="3、IPC$命令执行"></a>3、IPC$命令执行</h4><p>1、通过at命令制定计划进行命令执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">at \\192.168.1.1 11:15am cmd /c &quot;whoami&quot;</span><br></pre></td></tr></table></figure>
+<p>2、通过at命令制定计划进行多层代理的命令执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">at \\192.168.100.1 11:15am cmd /c &quot;net use \\192.168.200.1\ipc$ 密码 /user:账号&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">at \\192.168.100.1 11:15am cmd /c &quot;at \\192.168.100.1 11:15am cmd /c &quot;whoami&quot; &quot;</span><br></pre></td></tr></table></figure>
+<h2 id="四、Hash传递实战演示"><a href="#四、Hash传递实战演示" class="headerlink" title="四、Hash传递实战演示"></a>四、Hash传递实战演示</h2><p>1、首先尝试抓取密码发现获取的全部都是密文。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345763229-43564f2c-2ad1-431b-bc08-07b7eb4153b5.png#id=Wq5bj&originHeight=483&originWidth=824&originalType=binary&ratio=1&status=done&style=none"><br>2、这里虽然没有获取到明文密码，但是获取了域管理员用户的NTLM。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345763760-157b55ac-3b95-4750-bf9a-38182130e1e3.png#id=pcNc5&originHeight=168&originWidth=684&originalType=binary&ratio=1&status=done&style=none"><br>3、提权到SYSTEM权限，执行net user /domain，获取域管所在的主机地址。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345764279-03074502-8f55-432a-ad67-9676030be874.png#id=dpsM1&originHeight=526&originWidth=1107&originalType=binary&ratio=1&status=done&style=none"><br>4、尝试使用ipc$读取域管的c盘目录，显示拒绝访问。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345764507-d5cbf6b0-e77b-4767-9b59-f73db8c64e0d.png#id=lYMUp&originHeight=117&originWidth=542&originalType=binary&ratio=1&status=done&style=none"><br>5、通过mimikatz工具进行Hash传递。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sekurlsa::pth /user:administrator /domain:&quot;ajie.cool&quot; /ntlm:f1de694efa543bb780da59c049541ea3 </span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345764780-05cd1a89-8107-405a-b5d9-9c9860192672.png#id=evpvB&originHeight=413&originWidth=801&originalType=binary&ratio=1&status=done&style=none"><br>6、执行完之后会弹出一个命令提示符，执行dir \AD.ajie.cool\c$成功无需账号密码获取了域控机器的c盘的权限，列出了c盘的文件。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345765099-c88ee4b4-cb15-4c59-9f58-46c3dd6ac735.png#id=jYAZY&originHeight=680&originWidth=1171&originalType=binary&ratio=1&status=done&style=none"><br>7、在通过PTH弹出的命令提示符中通过../跳转到PsExec.exe文件所在目录，执行命令提权获取一个域控机器的cmd命令提示符。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345765425-858974c0-ee79-4b05-ae75-babbb922df3a.png#id=RL6m1&originHeight=314&originWidth=818&originalType=binary&ratio=1&status=done&style=none"><br>8、执行ipconfig可以看到是域控所在机器的IP地址，成功拿到域控所在机器的权限。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345765979-ecc4a663-43fa-4184-b33c-393ee0f99bf7.png#id=rSAbN&originHeight=730&originWidth=1009&originalType=binary&ratio=1&status=done&style=none"><br>9、在域控中新建用户并加到管理员组。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345766467-5958e748-9d77-447a-bb49-f9449260b059.png#id=nwyNq&originHeight=192&originWidth=774&originalType=binary&ratio=1&status=done&style=none"><br>10、以新创建的用户远程桌面登录域控，发现无法连接远程桌面服务。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345767038-8803cc09-7304-42ae-9817-387e3ca7bb50.png#id=PKdkl&originHeight=615&originWidth=983&originalType=binary&ratio=1&status=done&style=none"><br>11、通过reg命令查询注册表，查看远程桌面服务发现返回0x01，说明远程桌面服务没有开启。（开启则返回0x00）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REG QUERY &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server&quot; /v fDenyTSConnections</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345767522-8b0e0d06-2877-43d6-b24d-0a40ba525de1.png#id=VLzZ2&originHeight=173&originWidth=801&originalType=binary&ratio=1&status=done&style=none"><br>12、通过拿到的域控的命令提示符来执行修改注册表操作，打开远程服务功能。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal&quot; &quot;Server /v fDenyTSConnections /t REG_DWORD /d 00000000 /f</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REG ADD &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&quot; /v PortNumber /t REG_DWORD /d 0x00000d3d /f</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345768048-f11cbc70-1a25-4939-b363-86b11e28f0fb.png#id=YIZ7H&originHeight=345&originWidth=802&originalType=binary&ratio=1&status=done&style=none"><br>13、以新建的hackerend用户远程桌面登录域控。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345768530-eb0d3a81-1a0a-4302-82fa-fbbd97343099.png#id=hcWCj&originHeight=644&originWidth=1062&originalType=binary&ratio=1&status=done&style=none"></p>
+<h1 id="0x06-黄金票据"><a href="#0x06-黄金票据" class="headerlink" title="0x06 黄金票据"></a>0x06 黄金票据</h1><h2 id="一、基础知识-1"><a href="#一、基础知识-1" class="headerlink" title="一、基础知识"></a>一、基础知识</h2><pre><code>前面了解到在域环境中，域控的账号密码可以登录域内任意一台主机，那么主机是如何检测域控账号密码是否正确的呢？检验账号密码可以有两种方法，询问域控或者设置一个专门检测账号密码是否正确的第三方中心。在域中便使用到了第三方中心来检验输入的账号密码是否相同。这种第三方中心叫KDC密钥分发中心。
+</code></pre>
+<h2 id="二、KDC密钥分发中心"><a href="#二、KDC密钥分发中心" class="headerlink" title="二、KDC密钥分发中心"></a>二、KDC密钥分发中心</h2><pre><code>KDC（kerberos Distribution Center）密钥分发中心，维护所有账户的名称和Master Key（key的hash code）。
+</code></pre>
+<p>提供：AS认证服务、TGS票据授予服务。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345769080-55e5fcc9-f990-46d3-90b0-2578182b2783.png#id=FtcZ4&originHeight=568&originWidth=1007&originalType=binary&ratio=1&status=done&style=none"></p>
+<h4 id="1、AS"><a href="#1、AS" class="headerlink" title="1、AS"></a>1、AS</h4><pre><code>授权服务（Authorization Server），对于上面的流程1，提供初始授权认证，用户表明需求并使用密码对请求进行加密，AS用提供的密码对请求进行解密后得到的请求内容，返回给用户一个TGT（票据授权票据 ticket granting tickets）（用一个密码加密）。
+</code></pre>
+<h4 id="2、TGS"><a href="#2、TGS" class="headerlink" title="2、TGS"></a>2、TGS</h4><pre><code>用户得到TGT之后使用TGT去访问TGS（票据授权中心Ticket Granting Server），
+</code></pre>
+<p>TGS验证TGT后（使用密钥解密），返回一个Ticket给用户；用户得到Ticket后去访问Server，Server收到Ticket和KDC进行验证，通过后提供服务。</p>
+<h4 id="3、票据"><a href="#3、票据" class="headerlink" title="3、票据"></a>3、票据</h4><pre><code>在内网渗透中，票据分为白银票据和黄金票据。分别对应域普通用户的票据和域管理员的票据。票据就是Kerberos认证协议的Ticket，因为已经经过了AS和TGS的校验，所以获取了票据之后，可以任意登录目标主机。
+</code></pre>
+<p>在查询域内用户的时候，总会看到一个用户叫krbtgt，如图5-37所示。krbtgt账户其实就是KDC秘钥分发中心用的超管账户。我们拿着krbtgt账户的票据，去访问域内机器，目标主机会认为我们是KDC秘钥分发中心，所以直接给了最高的权限允许我们访问。<br>一般管理员会修改域控账号的密码，但是很少有管理员会修改Krbtgt的密码。在内网渗透的最后阶段，我们需要通过获取黄金票据进行权限维持，那么下面将介绍如何获取krbtgt账户的黄金票据。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345769572-7cece8b9-d275-4ba0-b3db-3566e02ff312.png#id=AlP48&originHeight=176&originWidth=605&originalType=binary&ratio=1&status=done&style=none"></p>
+<h2 id="三、实战演示"><a href="#三、实战演示" class="headerlink" title="三、实战演示"></a>三、实战演示</h2><p>1、首先通过远程桌面将mimikatz.exe和PsExec.exe上传到域控主机。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345770170-b6341803-d9bf-4e9a-ab7c-fe384b24f016.png#id=wBPDe&originHeight=399&originWidth=982&originalType=binary&ratio=1&status=done&style=none"><br>2、通过PsExec提权为SYSTEM，然后执行mimikatz，输入命令lsadump::dcsync /user:krbtgt  获取krbtgt的hash值。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345770650-dd0208ec-ecdf-40ce-be08-0966a89a5b06.png#id=LpxDC&originHeight=790&originWidth=1284&originalType=binary&ratio=1&status=done&style=none"><br>3、这里制作黄金票据需要的数据为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Object Security ID   : S-1-5-21-3296092892-1320626564-2720975204</span><br><span class="line">Hash NTLM: 31edc56a2302a25a2e9bee5f04abd659</span><br></pre></td></tr></table></figure>
+<p>原Object Security ID最后面有个-502是作为标识的，在制作时需要手动删除。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345771123-72ec9742-736f-4741-ae8f-d6dbdb2da010.png#id=Nod75&originHeight=200&originWidth=515&originalType=binary&ratio=1&status=done&style=none"></p>
+<p>4、退出远程桌面，在攻击机通过mimikatz制作黄金票据。执行命令后会生成一个AD.kiribi文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kerberos::golden /admin:administrator /domain:ajie.cool /sid:S-1-5-21-3296092892-1320626564-2720975204 /krbtgt:31edc56a2302a25a2e9bee5f04abd659 /ticket:administrator.kiribi</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345771673-f14db64d-11bb-48f4-9f96-66b614bb902a.png#id=GhOf6&originHeight=673&originWidth=870&originalType=binary&ratio=1&status=done&style=none"><br>5、制作完票据之后，先尝试获取域控的c盘的权限发现拒绝访问。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345772165-ad5dfd43-b089-4ab3-b970-ae22667b924a.png#id=bXIYZ&originHeight=89&originWidth=555&originalType=binary&ratio=1&status=done&style=none"><br>6、通过kerberos::purge清空票据缓存；kerberos::list列出票据显示为空，说明清空了所以票据。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345772705-2f9f49de-f749-4308-9c79-b76171b8d523.png#id=Nu1AZ&originHeight=108&originWidth=457&originalType=binary&ratio=1&status=done&style=none"><br>7、通过kerberos::ptt administrator.kiribi加载生成的票据。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345773114-bcd8678b-93b6-4125-9693-fd42d31ac308.png#id=lwjTC&originHeight=258&originWidth=806&originalType=binary&ratio=1&status=done&style=none"><br>8、成功无密码获取域控c盘权限，后面进一步提权与Hash传递处相仿，就不做演示了。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1635345773401-e0ff3d7c-ae81-4d8a-8e42-ae607adcc4c8.png#id=kzRFm&originHeight=504&originWidth=825&originalType=binary&ratio=1&status=done&style=none"></p>
+<h1 id="0x07-总结"><a href="#0x07-总结" class="headerlink" title="0x07 总结"></a>0x07 总结</h1><p>以上便是我学习的简单地从外网获取shell，经过提权或不提权直接进行内网渗透的一个简单过程，其中涉及一些概念问题没有说的很明白，希望表哥们提点提点。以上仅为个人学习过程，可能知识点过于简单，望理解。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">jasson</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://j-jasson2.github.io/2021/10/02/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E5%88%9D%E6%8E%A2(%E4%B8%80)/">https://j-jasson2.github.io/2021/10/02/内网渗透初探(一)/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://j-jasson2.github.io" target="_blank">jasson个人博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">内网渗透</a></div><div class="post_share"><div class="social-share" data-image="/images/neiwang.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/10/25/src%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E4%B9%8B%E6%9C%89%E6%95%88%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"><img class="prev-cover" src="/images/src_wajue.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">src漏洞挖掘之有效信息收集</div></div></a></div><div class="next-post pull-right"><a href="/2021/08/07/Nginx%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%BC%8F%E6%B4%9E%E4%B9%8Badd_header%E8%A2%AB%E8%A6%86%E7%9B%96/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&amp;refer=http%3A%2F%2Fupload-images.jianshu.io&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630941831&amp;t=6d3fe55cc7cb43085f42e676981de631" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Nginx中间件漏洞之add_header被覆盖</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/11/22/内网渗透初探(二)/" title="内网渗透初探(二)"><img class="cover" src="/images/neiwang.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-11-22</div><div class="title">内网渗透初探(二)</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&amp;refer=http%3A%2F%2Finews.gtimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630728108&amp;t=1576409e5f212dd7279b9a1c880c7086" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">jasson</div><div class="author-info__description">专注于Web、内网渗透、红蓝攻防、代码审计，分享知识，分享生活。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">67</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/j-jasson2"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">0x01 基础知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="toc-number">2.</span> <span class="toc-text">0x02 内网穿透</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%85%B7%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-number">2.1.</span> <span class="toc-text">一、具体流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.</span> <span class="toc-text">0x03 内网信息收集</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-Hash%E8%AF%BB%E5%8F%96"><span class="toc-number">4.</span> <span class="toc-text">0x04 Hash读取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x05-Hash%E4%BC%A0%E9%80%92"><span class="toc-number">5.</span> <span class="toc-text">0x05 Hash传递</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">5.1.</span> <span class="toc-text">一、基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Wdigest"><span class="toc-number">5.2.</span> <span class="toc-text">二、Wdigest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81IPC"><span class="toc-number">5.3.</span> <span class="toc-text">三、IPC$</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81%E6%A6%82%E5%BF%B5"><span class="toc-number">5.3.0.1.</span> <span class="toc-text">1、概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81IPC-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.3.0.2.</span> <span class="toc-text">2、IPC$常用命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81IPC-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">5.3.0.3.</span> <span class="toc-text">3、IPC$命令执行</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Hash%E4%BC%A0%E9%80%92%E5%AE%9E%E6%88%98%E6%BC%94%E7%A4%BA"><span class="toc-number">5.4.</span> <span class="toc-text">四、Hash传递实战演示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x06-%E9%BB%84%E9%87%91%E7%A5%A8%E6%8D%AE"><span class="toc-number">6.</span> <span class="toc-text">0x06 黄金票据</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86-1"><span class="toc-number">6.1.</span> <span class="toc-text">一、基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81KDC%E5%AF%86%E9%92%A5%E5%88%86%E5%8F%91%E4%B8%AD%E5%BF%83"><span class="toc-number">6.2.</span> <span class="toc-text">二、KDC密钥分发中心</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%E3%80%81AS"><span class="toc-number">6.2.0.1.</span> <span class="toc-text">1、AS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%E3%80%81TGS"><span class="toc-number">6.2.0.2.</span> <span class="toc-text">2、TGS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E3%80%81%E7%A5%A8%E6%8D%AE"><span class="toc-number">6.2.0.3.</span> <span class="toc-text">3、票据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E6%88%98%E6%BC%94%E7%A4%BA"><span class="toc-number">6.3.</span> <span class="toc-text">三、实战演示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x07-%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">0x07 总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/11/22/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E5%88%9D%E6%8E%A2(%E4%BA%8C)/" title="内网渗透初探(二)"><img src="/images/neiwang.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="内网渗透初探(二)"/></a><div class="content"><a class="title" href="/2021/11/22/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E5%88%9D%E6%8E%A2(%E4%BA%8C)/" title="内网渗透初探(二)">内网渗透初探(二)</a><time datetime="2021-11-22T02:45:41.000Z" title="发表于 2021-11-22 10:45:41">2021-11-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/02/ClassCMS1.3%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" title="ClassCMS1.3任意文件上传漏洞分析"><img src="/img/12.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ClassCMS1.3任意文件上传漏洞分析"/></a><div class="content"><a class="title" href="/2021/11/02/ClassCMS1.3%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" title="ClassCMS1.3任意文件上传漏洞分析">ClassCMS1.3任意文件上传漏洞分析</a><time datetime="2021-11-02T02:45:41.000Z" title="发表于 2021-11-02 10:45:41">2021-11-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/11/02/Oracle%20%E6%B3%A8%E5%85%A5bypass%EF%BC%88%E8%89%B0%E9%9A%BE%E7%9A%84%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B%EF%BC%89/" title="Oracle 注入bypass（艰难的心路历程）"><img src="/images/oracle.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Oracle 注入bypass（艰难的心路历程）"/></a><div class="content"><a class="title" href="/2021/11/02/Oracle%20%E6%B3%A8%E5%85%A5bypass%EF%BC%88%E8%89%B0%E9%9A%BE%E7%9A%84%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B%EF%BC%89/" title="Oracle 注入bypass（艰难的心路历程）">Oracle 注入bypass（艰难的心路历程）</a><time datetime="2021-11-02T02:45:41.000Z" title="发表于 2021-11-02 10:45:41">2021-11-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/10/29/%E6%A2%A6%E6%83%B3CMS%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90&amp;%E5%8F%91%E7%8E%B0%E5%B0%8F%E5%BD%A9%E8%9B%8B/" title="梦想CMS注入漏洞分析&amp;发现小彩蛋"><img src="/images/sql.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="梦想CMS注入漏洞分析&amp;发现小彩蛋"/></a><div class="content"><a class="title" href="/2021/10/29/%E6%A2%A6%E6%83%B3CMS%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90&amp;%E5%8F%91%E7%8E%B0%E5%B0%8F%E5%BD%A9%E8%9B%8B/" title="梦想CMS注入漏洞分析&amp;发现小彩蛋">梦想CMS注入漏洞分析&amp;发现小彩蛋</a><time datetime="2021-10-29T02:45:41.000Z" title="发表于 2021-10-29 10:45:41">2021-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/10/25/src%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E4%B9%8B%E6%9C%89%E6%95%88%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" title="src漏洞挖掘之有效信息收集"><img src="/images/src_wajue.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="src漏洞挖掘之有效信息收集"/></a><div class="content"><a class="title" href="/2021/10/25/src%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%E4%B9%8B%E6%9C%89%E6%95%88%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" title="src漏洞挖掘之有效信息收集">src漏洞挖掘之有效信息收集</a><time datetime="2021-10-25T02:45:41.000Z" title="发表于 2021-10-25 10:45:41">2021-10-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> jasson</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><p><a style="margin-inline:5px"target="_blank" href="https://hexo.io/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo" alt="HEXO"></a><a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用 Butterfly" alt="Butterfly"></a><a style="margin-inline:5px"target="_blank" href="https://www.jsdelivr.com/"><img src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用 Jsdelivr 为静态资源提供CDN加速" alt="Jsdelivr"></a><a style="margin-inline:5px"target="_blank" href="https://github.com/"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由 GitHub 托管" alt="GitHub"></a><a style="margin-inline:5px"target="_blank"href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" alt="img" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'ezr37wKgCkQA0GoJHntOvgbB-MdYXbMMI',
+      appKey: '7waFMOWmYb026lMWzexxu7RF',
+      placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+      requiredFields: ["nick,mail"],
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script defer src="/live2d-widget/autoload.js"></script><script defer src="/js/phone.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="true" data-text="富强,明主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
